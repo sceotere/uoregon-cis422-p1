@@ -16,6 +16,6 @@ Group members will communicate outside of in-person meetings using the following
 
 ## Tasks and assignments
 
-Tasks and assignments will be recorded in 'TaskAssignments_CURRENT.xlsx', an Excel spreadsheet found in the 'management' folder.
+Tasks and assignments will be recorded in 'TaskAssignments_\<date\>.xlsx', an Excel spreadsheet found in the 'management' folder.
 
-Generally, before modifying the file, the spreadsheet should be archived first by making a copy with the current date in the filename as such: 'TaskAssignments_mmddyy.xlsx'. This can be done by saving a copy in Excel and then using 'git add TaskAssignments_\*.xlsx'.
+Generally, before modifying the up-to-date file, the spreadsheet should be archived first by making a copy with the current date in the filename as such: 'TaskAssignments_mmddyy.xlsx'. This can be done by saving a copy in Excel and then using 'git add TaskAssignments_\*.xlsx'.
