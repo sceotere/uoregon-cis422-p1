@@ -12,16 +12,20 @@ from tkinter import *
 
 # Button Commands
 def command1():
+	pass
 	#do something here
 
 def command2():
+	pass
 	#do something here
 
 def command3():
+	pass
 	#do another thing
 
 #Structure of the main menu
 def construct():
+	pass
 	#will come back to this -op
 
 win = Tk()
