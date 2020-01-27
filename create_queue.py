@@ -9,12 +9,16 @@ Authors: Mikayla Campbell, Bethany Van Meter
 """
 #check TODOs
 
+import io
 import random
+import os.path
+from os import path
 
 class Student:
 	def __init__(self, first, last, id_num, email, cc_num, flag, num_flags):
                 # initialize all values.
-                # We will end up reading in from a file each of these, so it'll be easy to establish each of the values.
+                # We will end up reading in from a file each of these,
+                # so it'll be easy to establish each of the values.
 		self.first = first
 		self.last = last
 		self.id_num = id_num
@@ -33,13 +37,17 @@ class Student:
 			self.last, self.id_num, self.email, self.cc_num, self.flag, self.num_flags)
 
 # TODO: change to create the class from file input
-def create_class():
-        # test class for small testing
-	test_class = [["Mikayla", "Campbell", 904895018, "mikayla@gmail.com"],
-		["Billy", "Bob", 893028490, "billy@gmail.com"],
-		["John", "Doe", 390847638, "john@gmail.com"],
-		["Sarah", "Davis", 278938475, "sarah@gmail.com"],
-		["Beth", "Lee", 904895098, "beth@gmail.com"]]
+def create_class(class_roster):
+	current_class = []
+	if path.exists("DO_NOT_TOUCH_class_summary.txt"):
+		   # test class for small testing
+		current_class = [["Mikayla", "Campbell", 904895018, "mikayla@gmail.com"],
+			["Billy", "Bob", 893028490, "billy@gmail.com"],
+			["John", "Doe", 390847638, "john@gmail.com"],
+			["Sarah", "Davis", 278938475, "sarah@gmail.com"],
+			["Beth", "Lee", 904895098, "beth@gmail.com"]]
+	else:
+		current_class = io.parse_class_roster("test_class.txt")
 
 	class_roster = []
 	for student_info in test_class:
@@ -97,8 +105,10 @@ def add_to_q(q, class_li):
         i = 0
         # while we haven't added a student to the on deck queue
         while(len(q) < 4):
-                # if the student we are trying to add is already in the "on deck" queue, continue looking for another to add
-                if(class_li_short[i].id_num == q[0].id_num or class_li_short[i].id_num == q[1].id_num or class_li_short[i].id_num == q[2].id_num):
+                # if the student we are trying to add is already in the "on deck" queue,
+                # continue looking for another to add
+                if(class_li_short[i].id_num == q[0].id_num or\
+                	class_li_short[i].id_num == q[1].id_num or class_li_short[i].id_num == q[2].id_num):
                         i += 1
                 # else, the student we are trying to add isn't in the on deck" queue
                 else:
@@ -137,7 +147,8 @@ def main():
         # print the on deck queue and students remaining after adding from the queue left over:
         q_2, CIS422_rand2 = add_to_q(q_shift, CIS422_rand)
         
-        print("the on deck queue and students remaining after adding from the queue left over:\n\n", q_2, "\n\nQueue left over:\n", CIS422_rand2)
+        print("the on deck queue and students remaining after adding from the queue left over:\n\n",
+        	q_2, "\n\nQueue left over:\n", CIS422_rand2)
         print("\n\n\n")
 
         print("the removal of a student from the on deck queue (num = 1):\n")
@@ -146,7 +157,8 @@ def main():
         print("\n\n\n")
         
         q_3, CIS422rand3 = add_to_q(q_shift2, CIS422_rand2)
-        print("the on deck queue and students remaining after adding from the queue left over:\n\n", q_3, "\n\nQueue left over:\n", CIS422rand3)
+        print("the on deck queue and students remaining after adding from the queue left over:\n\n",
+        	q_3, "\n\nQueue left over:\n", CIS422rand3)
         print("\n\n\n")
 
         
