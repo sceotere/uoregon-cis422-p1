@@ -35,7 +35,7 @@ class Student:
 # TODO: change to create the class from file input
 def create_class():
         # test class for small testing
-	test_class = [["Mikayla", "Campbell", 904895098, "mikayla@gmail.com"],
+	test_class = [["Mikayla", "Campbell", 904895018, "mikayla@gmail.com"],
 		["Billy", "Bob", 893028490, "billy@gmail.com"],
 		["John", "Doe", 390847638, "john@gmail.com"],
 		["Sarah", "Davis", 278938475, "sarah@gmail.com"],
@@ -88,12 +88,28 @@ def shift_q(num, q):
 
 # adds a student to the end of the queue
 def add_to_q(q, class_li):
-        # appends the student at the beginning of the longer student queue
-	q.append(class_li[0])
-	# "reset" the non-"on deck" queue to not include the now "on deck" student
-	class_li_short = class_li[1:]
-	# return the on deck queue and rest of students
-	return q, class_li_short
+        # if class_li (students not called yet) is empty, fill it again
+        if class_li == None or len(class_li) == 0:
+                class_li = create_class()
+                class_li = randomize_li(class_li)
+
+        # until we have added a student, keep looking for one not in the queue yet (count with i)
+        class_li_short = class_li
+        i = 0
+        # while we haven't added a student to the on deck queue
+        while(len(q) < 4):
+                # if the student we are trying to add is already in the "on deck" queue, continue looking for another to add
+                if(class_li_short[i].id_num == q[0].id_num or class_li_short[i].id_num == q[1].id_num or class_li_short[i].id_num == q[2].id_num):
+                        i += 1
+                # else, the student we are trying to add isn't in the on deck" queue
+                else:
+                        # append the student to the end of the "on deck" queue
+                        # and that student is removed from not "on deck" queue by the pop method
+                        q.append(class_li_short.pop(i))
+        
+        # return the on deck queue and rest of students in the not "on deck" queue
+        # not on deck student list may be empty. This is expected
+        return q, class_li_short
 
 def main():
         CIS422 = create_class()
@@ -121,14 +137,19 @@ def main():
         
         # print the on deck queue and students remaining after adding from the queue left over:
         q_2, CIS422_rand2 = add_to_q(q_shift, CIS422_rand)
+        
         print("the on deck queue and students remaining after adding from the queue left over:\n\n", q_2, "\n\nQueue left over:\n", CIS422_rand2)
         print("\n\n\n")
+
+        print("the removal of a student from the on deck queue (num = 1):\n")
+        q_shift2 = shift_q(1, q_2)
+        print(q_shift2)
+        print("\n\n\n")
         
-##        print(q_2)
-##        print("\n\n\n")
-##        print(CIS422_rand)
-##        print("\n\n\n")
-##        print(CIS422_rand2)
+        q_3, CIS422rand3 = add_to_q(q_shift2, CIS422_rand2)
+        print("the on deck queue and students remaining after adding from the queue left over:\n\n", q_3, "\n\nQueue left over:\n", CIS422rand3)
+        print("\n\n\n")
+
         
 if __name__ == "__main__":
 	main()
