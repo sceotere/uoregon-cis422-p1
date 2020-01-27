@@ -65,7 +65,6 @@ def make_q(class_li):
 	q = [None, None, None, None]
 
 	#ensure the roster passed in is not empty
-	# TODO: what if class_li == None?
 	if class_li != None:
                 # 4 because it's the queue "on deck" size
 		for i in range(4):
