@@ -72,17 +72,19 @@ def make_q(class_li):
 			q[i] = class_li[i]
 		# after adding to smaller queue, set the leftover students to list
 		# of remaining students from original list
-		class_li_short = class_li[3:]
+		class_li_short = class_li[4:]
 	# return the "on deck" queue and the remaining students in the larger queue not shown
 	return q, class_li_short
 
 # remove the student the user wants to remove and returns a 3 student list
 #(acts as a shift after removal)
+# TODO: determine here if the removal was flagged or not
 def shift_q(num, q):
-        # remove the student in the queue at num position
-	q.remove(q[num])
+        # remove the student in the queue at num position but also increase the cc_num (cold call number)
+        q[num].cc_num += 1
+        q.remove(q[num])
         # return the on deck queue list of remaining students
-	return q
+        return q
 
 # adds a student to the end of the queue
 def add_to_q(q, class_li):
@@ -94,20 +96,39 @@ def add_to_q(q, class_li):
 	return q, class_li_short
 
 def main():
-	CIS422 = create_class()
-	CIS422_rand = CIS422[:]
-	CIS422_rand = randomize_li(CIS422_rand)
-	CIS422_q, CIS422_rand = make_q(CIS422_rand)
-	q_shift = shift_q(1, CIS422_q)
-	q_2, CIS422_rand2 = add_to_q(q_shift, CIS422_rand)
+        CIS422 = create_class()
+        CIS422_rand = CIS422[:]
+        CIS422_rand = randomize_li(CIS422_rand)
 
-	print(q_shift)
-	print("\n\n\n")
-	print(q_2)
-	print("\n\n\n")
-	print(CIS422_rand)
-	print("\n\n\n")
-	print(CIS422_rand2)
+        # all random students in one queue
+        print("all random students in one queue")
+        print(CIS422_rand)
+        print("\n\n\n")
+        
+        CIS422_q, CIS422_rand = make_q(CIS422_rand)
 
+        # print the on deck queue followed by the students remaining in the queue (without adding)
+        print("the on deck queue followed by the students remaining in the queue (without adding)\n")
+        print("On deck queue: \n", CIS422_q)
+        print("\nRemaining students to add to on deck queue:\n", CIS422_rand)
+        print("\n\n\n")
+
+        # print the removal of a student from the on deck queue:
+        print("the removal of a student from the on deck queue (num = 1):\n")
+        q_shift = shift_q(1, CIS422_q)
+        print(q_shift)
+        print("\n\n\n")
+        
+        # print the on deck queue and students remaining after adding from the queue left over:
+        q_2, CIS422_rand2 = add_to_q(q_shift, CIS422_rand)
+        print("the on deck queue and students remaining after adding from the queue left over:\n\n", q_2, "\n\nQueue left over:\n", CIS422_rand2)
+        print("\n\n\n")
+        
+##        print(q_2)
+##        print("\n\n\n")
+##        print(CIS422_rand)
+##        print("\n\n\n")
+##        print(CIS422_rand2)
+        
 if __name__ == "__main__":
 	main()
