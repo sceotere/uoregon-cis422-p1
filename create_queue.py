@@ -3,14 +3,18 @@ CIS 422 Project 1 Queue
 
 Description: 
 
-Date Last Modified: 1/25/20
+Date Last Modified: 1/26/20
 
 Authors: Mikayla Campbell, Bethany Van Meter
 """
+#check TODOs
+
 import random
 
 class Student:
 	def __init__(self, first, last, id_num, email, cc_num, flag, num_flags):
+                # initialize all values.
+                # We will end up reading in from a file each of these, so it'll be easy to establish each of the values.
 		self.first = first
 		self.last = last
 		self.id_num = id_num
@@ -20,13 +24,17 @@ class Student:
 		self.num_flags = num_flags
 
 	def __str__(self):
+                # simple string representation
 		return "[{}, {}, {}, {}]".format(self.first, self.last, self.id_num, self.email)
 
 	def __repr__(self):
+                # to show all the values of an instance of a Student
 		return "Student({}, {}, {}, {}, {}, {}, {})".format(self.first,
 			self.last, self.id_num, self.email, self.cc_num, self.flag, self.num_flags)
 
+# TODO: change to create the class from file input
 def create_class():
+        # test class for small testing
 	test_class = [["Mikayla", "Campbell", 904895098, "mikayla@gmail.com"],
 		["Billy", "Bob", 893028490, "billy@gmail.com"],
 		["John", "Doe", 390847638, "john@gmail.com"],
@@ -35,31 +43,54 @@ def create_class():
 
 	class_roster = []
 	for student_info in test_class:
+                # create a student
 		current_student = Student(student_info[0],
 			student_info[1], student_info[2], student_info[3], 0, 0, 0)
+		# append that created student to the roster
 		class_roster.append(current_student)
 
+        # return the created roster
 	return class_roster
 
 def randomize_li(class_li):
+        # use Python's built in shuffle function
 	random.shuffle(class_li)
 	return class_li
 
+# for the initial creation of the "on deck" queue
 def make_q(class_li):
+        # each queue has 4 "on deck" students
+
+        #create a queue with 4 "empty" spots
 	q = [None, None, None, None]
+
+	#ensure the roster passed in is not empty
+	# TODO: what if class_li == None?
 	if class_li != None:
+                # 4 because it's the queue "on deck" size
 		for i in range(4):
 			q[i] = class_li[i]
+		# after adding to smaller queue, set the leftover students to list
+		# of remaining students from original list
 		class_li_short = class_li[3:]
+	# return the "on deck" queue and the remaining students in the larger queue not shown
 	return q, class_li_short
 
+# remove the student the user wants to remove and returns a 3 student list
+#(acts as a shift after removal)
 def shift_q(num, q):
+        # remove the student in the queue at num position
 	q.remove(q[num])
+        # return the on deck queue list of remaining students
 	return q
 
+# adds a student to the end of the queue
 def add_to_q(q, class_li):
+        # appends the student at the beginning of the longer student queue
 	q.append(class_li[0])
+	# "reset" the non-"on deck" queue to not include the now "on deck" student
 	class_li_short = class_li[1:]
+	# return the on deck queue and rest of students
 	return q, class_li_short
 
 def main():
