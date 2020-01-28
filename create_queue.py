@@ -3,7 +3,7 @@ CIS 422 Project 1 Queue
 
 Description: 
 
-Date Last Modified: 1/26/20
+Date Last Modified: 1/27/20
 
 Authors: Mikayla Campbell, Bethany Van Meter
 """
@@ -50,7 +50,7 @@ def create_class(class_roster):
 		current_class = io.parse_class_roster("test_class.txt")
 
 	class_roster = []
-	for student_info in test_class:
+	for student_info in current_class:
                 # create a student
 		current_student = Student(student_info[0],
 			student_info[1], student_info[2], student_info[3], 0, 0, 0)
@@ -121,7 +121,7 @@ def add_to_q(q, class_li):
         return q, class_li_short
 
 def main():
-        CIS422 = create_class()
+        CIS422 = create_class("test_class.txt")
         CIS422_rand = CIS422[:]
         CIS422_rand = randomize_li(CIS422_rand)
 

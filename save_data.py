@@ -3,74 +3,89 @@ CIS 422 Project 1 Save Data
 
 Description: 
 
-Date Last Modified: 1/26/20
+Date Last Modified: 1/27/20
 
 Authors: Mikayla Campbell, Bethany Van Meter
 """
 
-# save the class roster with current information
+# Clean up and add comments
 
-# FIX TODOS
-
+import io
+import string
 import os.path
 from os import path
+import create_queue as cq
 
-# for this function I think we should 
-    # 1) Add to a students summary if it is already
-    #    there
-    # 2) Update flag, num_flags, and cc_num to 0 after
-    #    each use
-    # *** This way these variables can be used for the daily log ***
-    # *** and we won't have to make new variables for those ***
-def save_class_roster(class_roster, class_name):
+def save_term_summary(class_roster, class_name):
     if path.exists("DO_NOT_TOUCH{}_class_summary.txt"\
         .format(class_name)):
 
         class_file = open("DO_NOT_TOUCH{}_class_summary.txt"\
-            .format(class_name), "w")
+            .format(class_name), "r")
+        output = []
         current_line = class_file.readline()
+        output.append(current_line)
         current_line = class_file.readline()
+        output.append(current_line)
+        current_line = class_file.readline().strip("\n")
+
+        students_used = []
 
         while (current_line):
-            current_student = class_file.readline().strip("\n")
-            first_name, last_name, number, email, cc_num,
-                flag, flags = current_student.split("\t")
+            first_name, last_name, number, email, cc_num, flags = current_line.split("\t")
             for student in class_roster:
-                if student.number == number:
-                    if student.cc_num != 0 and student.num_flags != 0:
-                        student.cc_num += cc_num
-                        student.num_flags += flags
-                        class_file.write(current_line.replace(current_line,
-                            "{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(student.first,
-                            student.last, student.id_num, student.email,
-                            student.cc_num, student.flag, student.num_flags)))
+                if student.id_num == int(number):
+                    if student.id_num not in students_used:
+                        student.cc_num += int(cc_num)
+                        student.num_flags += int(flags)
+                        write_str = student.first + "\t" +\
+                            student.last + "\t" + \
+                            str(student.id_num) + "\t" + \
+                            student.email + "\t" + \
+                            str(student.cc_num) + "\t" + \
+                            str(student.num_flags) + "\n"
+                        output.append(write_str)
+                        students_used.append(int(number))
                     break
+            current_line = class_file.readline().strip("\n")
+
+
+        class_file.seek(0)
+        current_line = class_file.readline()
+        current_line = class_file.readline()
+        current_line = class_file.readline().strip("\n")
+
+        while (current_line):
+            first_name, last_name, number, email, cc_num, flags = current_line.split("\t")
+            for student in class_roster:
+                if student.id_num == number and number not in students_used:
+                    write_str = current_line + "\n"
+                    output.append(write_str)
+                    students_used.append(int(number))
+            current_line = class_file.readline().strip("\n")
+
+        class_file2 = open("DO_NOT_TOUCH{}_class_summary.txt"\
+            .format(class_name), "w")
+        class_file2.writelines(output)
     else:
         class_file = open("DO_NOT_TOUCH{}_class_summary.txt"\
-            .format(class_name), "w")
+            .format(class_name), "w+")
         class_file.write("{} Summary\n".format(class_name))
-        class_file.write("first", "\t",
-                             "last", "\t",
-                             "id_num", "\t",
-                             "email", "\t",
-                             "cc_num", "\t",
-                             "flag", "\t",
-                             "flags", "\t\n")
+        class_file.write("first\tlast\tid_num\temail\tcc_num\tflags\t\n")
 
         # for each student in the whole roster, save their data
         for student in class_roster:
-                class_file.write(student.first, "\t",
-                     student.last, "\t",
-                     student.id_num, "\t",
-                     student.email, "\t",
-                     student.cc_num, "\t",
-                     student.flag, "\t",
-                     student.num_flags, "\t\n")
+            write_str = student.first + "\t" +\
+                 student.last + "\t" + \
+                 str(student.id_num) + "\t" + \
+                 student.email + "\t" + \
+                 str(student.cc_num) + "\t" + \
+                 str(student.num_flags) + "\n"
+            class_file.write(write_str)
     class_file.close()
 
     for student in class_roster:
         student.cc_num = 0
-        student.flag = 0
         student.num_flags = 0
     return None
 
@@ -82,13 +97,20 @@ def save_daily_log(class_roster, class_name):
 
     # for each student in the whole roster, save their data
     for student in class_roster:
-        if student.cc_num != 0 or student.flag != 0:
-            class_file.write(student.first, "\t",
-                 student.last, "\t",
-                 student.id_num, "\t",
-                 student.email, "\t",
-                 student.cc_num, "\t",
-                 student.flag, "\t",
-                 student.num_flags, "\t\n")
+        if student.cc_num != 0 or student.num_flags != 0:
+            write_str = student.first + "\t" +\
+                 student.last + "\t" + \
+                 str(student.id_num) + "\t" + \
+                 student.email + "\t" + \
+                 str(student.cc_num) + "\t" + \
+                 str(student.num_flags) + "\n"
+            class_file.write(write_str)
     class_file.close()
+    return None
+
+def save_queue(queue, class_roster, class_name):
+    class_file = open("DO_NOT_TOUCH{}_saved_state.txt"\
+        .format(class_name), "w")
+    write_str = str(queue) + "\n" + str(class_roster) +"\n"
+    class_file.write(write_str)
     return None
