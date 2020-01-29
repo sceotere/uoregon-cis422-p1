@@ -8,6 +8,7 @@ Date Last Modified: 		Last Modified by:		Completed:
 """
 
 from tkinter import *
+import tkinter.font
 
 
 listOfNames = ["Bethany", "Mikayla", "Joseph", "Olivia", "Ben"]
@@ -31,7 +32,11 @@ def construct():
 	pass
 	#will come back to this -op
 
+#sets window size and background color
 win = Tk()
+win.geometry("350x150")
+win.config(bg="#002547") #dark slate gray
+
 #win.iconbitmap()
 #do this if I have time.
 
@@ -39,24 +44,29 @@ win = Tk()
 win.title("422 Cold Call")
 
 #labels and buttons
-#lbl1 = Label(text='Cold Call', bg = "#002547", fg= "white", font=("Arial", 40), relief = SUNKEN)
-#lbl1.pack(expand = 1)
+lbl1 = Label(text='On Deck:', bg = "#002547", fg= "white", font=("Arial", 16))
+lbl1.grid(row = 0, column = 1, padx=5, pady=5)
 
 slot0 =Label(text = listOfNames[0], highlightbackground = "#002547", padx = 10) #command = *put command here*
-slot0.grid(row=0, column=0)
+slot0.grid(row = 1, column = 1, padx=5, pady=5)
 
 slot1 =Label(text = listOfNames[1], highlightbackground = "#002547", padx = 10, anchor = N) #command = *put command here*
-slot1.grid(row=0, column=1)
+slot1.grid(row = 1, column = 2, padx=5, pady=5)
 
 slot2 =Label(text = listOfNames[2], highlightbackground = "#002547", padx = 10, anchor = N) #command = *put command here*
-slot2.grid(row=0, column=2)
+slot2.grid(row = 1, column = 3, padx=5, pady=5)
 
 slot3 =Label(text = listOfNames[3], highlightbackground = "#002547", padx = 10, anchor = N) #command = *put command here*
-slot3.grid(row=0, column=3)
+slot3.grid(row = 1, column = 4, padx=5, pady=5)
 
-#sets window size (which doesn't work atm) and background color
-win.config(width=700, height=500)
-win.config(bg="#002547") #dark slate gray
+b1 =Button(win, text = "help", highlightbackground = "#002547", padx = 10) #command = *put command here*
+b1.place(relx=1.0, rely=1.0, anchor=SE)
+
+b2 = Button(win, text = "import", highlightbackground = "#002547", padx = 10)
+b2.place(relx=0.0, rely=1.0, anchor=SW)
+
+b3 = Button(win, text = "export", highlightbackground = "#002547", padx = 10)
+b3.place(relx=0.20, rely=1.0, anchor=SW)
 
 
 # ent2 = Entry()
