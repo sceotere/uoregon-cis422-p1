@@ -1,0 +1,9 @@
+# Untracked files
+.DS_Store
+thumbs.db
+
+# Program generated files
+*.ini
+*.txt
+!test_class.txt
+!/test/*
