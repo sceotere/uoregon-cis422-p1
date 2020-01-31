@@ -6,7 +6,12 @@ Description: Contains the Tkinter GUI window
 Authors: Olivia Pannell, Ben Verney, Joseph Goh
 
 Date Last Modified: 		Last Modified by:		Completed:
-1/31/20  					Joseph Goh			Basic window and structure
+1/31/20  					Joseph Goh			    Basic window and structure
+
+TO DO:
+* Add always-on-top functionality
+    (This should be done at an OS X workstation, as the solution is OS specific)
+
 """
 
 from tkinter import *
@@ -91,7 +96,7 @@ slot3.grid(row=1, column=4, padx=5, pady=5)
 lbl2 = Label(win, text="Help: \nDequeue - up\nFlag - down", bg="#002547", fg="white", font=("Arial", 12))
 lbl2.place(relx=1.0, rely=1.0, anchor=SE)
 
-b2 = Button(win, text="Import", highlightbackground="#002547", padx=10, command=imprt)
+b2 = Button(win, text="Import", highlightbackground="#002547", padx=10, command=import_file)
 b2.place(relx=0.0, rely=1.0, anchor=SW)
 
 b3 = Button(win, text="Export", highlightbackground="#002547", padx=10, command=exprt)
