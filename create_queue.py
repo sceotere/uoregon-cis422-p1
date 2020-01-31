@@ -9,6 +9,7 @@ Authors: Mikayla Campbell, Bethany Van Meter
 """
 # check TODOs
 
+from typing import List
 import random
 from os import path
 
@@ -40,15 +41,16 @@ class Student:
 
 
 # TODO: change to create the class from file input
-def create_class(class_roster):
+def build_roster(summary_path: str = "DO_NOT_TOUCH_class_summary.txt") -> List[Student]:
     current_class = []
-    if path.exists("DO_NOT_TOUCH_class_summary.txt"):
+    if path.exists(summary_path):
         # test class for small testing
         current_class = [["Mikayla", "Campbell", 904895018, "mikayla@gmail.com"],
                          ["Billy", "Bob", 893028490, "billy@gmail.com"],
                          ["John", "Doe", 390847638, "john@gmail.com"],
                          ["Sarah", "Davis", 278938475, "sarah@gmail.com"],
                          ["Beth", "Lee", 904895098, "beth@gmail.com"]]
+    # TODO: Implement behavior for if class summary file is not found
     else:
         current_class = import_data.parse_class_roster("test_class.txt")
 
@@ -104,7 +106,7 @@ def shift_q(num, q):
 def add_to_q(q, class_li):
     # if class_li (students not called yet) is empty, fill it again
     if class_li is None or len(class_li) == 0:
-        class_li = create_class()
+        class_li = build_roster()
         class_li = randomize_li(class_li)
 
     # until we have added a student, keep looking for one not in the queue yet (count with i)
@@ -130,7 +132,7 @@ def add_to_q(q, class_li):
 
 
 def main():
-    cis422 = create_class("test_class.txt")
+    cis422 = build_roster("test_class.txt")
     cis422_rand = cis422[:]
     cis422_rand = randomize_li(cis422_rand)
 
