@@ -22,7 +22,7 @@ The session state shall be saved in two files in the same directory as the sourc
 
   ```
   rosterpath=<path to last opened roster csv file>
-  deckindices=<comma separated indices of the students on deck, relevant to Roster.students>
+  ondeck=<comma separated indices of the students on deck, relevant to Roster.students>
   nextindex=<value of Roster.next indicating which index of the shuffled-order list we are grabbing a student from next>
   ```
  

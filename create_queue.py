@@ -58,15 +58,21 @@ class Student:
 
 # Contains the list of Students, as well as the randomizing functionality
 class Roster:
-    def __init__(self, filepath: str = "DO_NOT_TOUCH_class_summary.txt"):
+    def __init__(self, deck_size: int = 4, filepath: str = "DO_NOT_TOUCH_class_summary.txt"):
         self.filepath = filepath
+
         self.students = []
         self.flagged = []
         self.size = 0
+
         self.order = []
         self._next = 0
 
+        self.on_deck = []
+        self.deck_size = deck_size
+
         # TODO: Implement behavior for if class summary file is not found
+        # Import the class summary file into memory
         with open(self.filepath, "r", newline='') as class_file:
             reader = csv.reader(class_file, dialect='excel-tab', quoting=csv.QUOTE_NONE)
             # Move past the header
@@ -78,8 +84,26 @@ class Roster:
                     self.flagged.append(current_student)
                 self.size += 1
 
-        for i in range(self.size):
-            self.order.append(i)
+        # Check for config data saved from previous sessions and fill deck accordingly
+        # Check for saved shuffled order
+        if path.exists("order.txt"):
+            with open("order.txt", "r") as order_file:
+                # The items of the line, converted to ints, then put back into a list
+                self.order = [int(i) for i in order_file.readline().strip("\n").split("\t")]
+        else:
+            for i in range(self.size):
+                self.order.append(i)
+
+        # Check for saved coldcall.ini
+        if path.exists("coldcall.ini"):
+            with open("coldcall.ini", "r") as conf_file:
+                self._next = int(conf_file.readline().strip("\n").split("=")[1])
+                # The text after the equals sign, split by commas, then converted to ints, put into a list
+                self.on_deck = [int(i) for i in conf_file.readline().strip("\n").split("=")[1].split(",")]
+                self.deck_size = len(self.on_deck)
+        else:
+            for i in range(self.size):
+                self.on_deck[i] = self.get_next_idx()
 
     def __repr__(self):
         return "Roster({})".format(self.size)
@@ -88,7 +112,7 @@ class Roster:
         random.shuffle(self.order)
         self._next = 0
 
-    def get_next(self) -> Student:
+    def get_next_idx(self) -> int:
         # If the next-index is larger than our entire roster, then we have an error
         if self._next > self.size:
             raise IndexError("The roster feed is out of bounds!")
@@ -99,9 +123,31 @@ class Roster:
         # Increment the next-index
         self._next += 1
 
-        return self.students[self.order[self._next]]
+        return self.order[self._next]
 
-    def write_to_file(self):
+    # Get the nth Student on deck
+    def get_student(self, n: int, from_deck: bool = True):
+        if from_deck:
+            return self.students[self.on_deck[n]]
+        else:
+            return self.students[n]
+
+    # Dequeue the nth Student on deck, grab the next one, and then return the dequeued Student
+    def dequeue(self, n: int, flag: bool = False) -> Student:
+        to_dequeue = self.students[self.on_deck[n]]
+        to_dequeue.cc_ct += 1
+        # If the instructor is flagging the student, take appropriate actions
+        if flag:
+            # If the student hasn't been flagged already, append them to the roster's flagged list
+            if not to_dequeue.flag:
+                self.flagged.append(to_dequeue)
+            to_dequeue.set_flag()
+        self.on_deck[n] = self.get_next_idx()
+
+        return to_dequeue
+
+    def save_state(self):
+        # Update the class summary
         rows = [
             [s.first, s.last, s.id_num, s.email, str(s.cc_ct), str(int(s.flag)), str(s.flag_ct)] for s in self.students
         ]
@@ -110,6 +156,7 @@ class Roster:
             writer.writerow(["FirstName", "LastName", "ID-Number", "Email", "ColdCallCount", "Flag", "FlagCount"])
             writer.writerows(rows)
 
+        # Create/Update the summary of flagged students
         flagged_rows = [
             [s.first, s.last, s.id_num, s.email, str(s.cc_ct), str(int(s.flag)), str(s.flag_ct)] for s in self.flagged
         ]
@@ -118,31 +165,17 @@ class Roster:
             writer.writerow(["FirstName", "LastName", "ID-Number", "Email", "ColdCallCount", "Flag", "FlagCount"])
             writer.writerows(flagged_rows)
 
+        # Store the current shuffled order of student indices
+        order_row = [str(idx) for idx in self.order]
+        with open("order.txt", "w", newline='') as order_file:
+            writer = csv.writer(order_file, dialect='excel-tab', quoting=csv.QUOTE_NONE)
+            writer.writerow(order_row)
 
-# Deck object will contain the (by default) four students on deck
-# and automatically select random students to add to deck
-class Deck:
-    def __init__(self, roster: Roster, size: int = 4):
-        self.roster = roster
-        self.size = size
-        self.on_deck = []
-
-        for i in range(self.size):
-            self.on_deck[i] = self.roster.get_next()
-
-    # dequeue should increment the Student's cc count, flag if appropriate, and load in a new Student
-    def dequeue(self, idx: int, flag: bool = False) -> Student:
-        to_dequeue = self.on_deck[idx]
-        to_dequeue.cc_ct += 1
-        # If the instructor is flagging the student, take appropriate actions
-        if flag:
-            # If the student hasn't been flagged already, append them to the roster's flagged list
-            if not to_dequeue.flag:
-                self.roster.flagged.append(to_dequeue)
-            to_dequeue.set_flag()
-        self.on_deck[idx] = self.roster.get_next()
-
-        return to_dequeue
+        # Store other session state info in config file
+        with open("coldcall.ini", "w") as conf_file:
+            conf_file.write("rosterpath=" + self.filepath + "\n")
+            conf_file.write("ondeck=" + ",".join([str(idx) for idx in self.on_deck]) + "\n")
+            conf_file.write("nextindex=" + str(self._next) + "\n")
 
 
 # TODO: Deprecate this
