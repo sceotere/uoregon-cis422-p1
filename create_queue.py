@@ -58,13 +58,14 @@ class Student:
 # Contains the list of Students, as well as the randomizing functionality
 class Roster:
     def __init__(self, filepath: str = "DO_NOT_TOUCH_class_summary.txt"):
+        self.filepath = filepath
         self.students = []
         self.size = 0
         self.order = []
         self._next = 0
 
         # TODO: Implement behavior for if class summary file is not found
-        with open(filepath, "r") as class_file:
+        with open(self.filepath, "r") as class_file:
             current_line = class_file.readline().strip("\n")
             while current_line != "":
                 first, last, id_num, email = current_line.split("\t")
