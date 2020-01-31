@@ -5,7 +5,7 @@ Description:
 
 Date Last Modified: 1/27/20
 
-Authors: Mikayla Campbell, Bethany Van Meter
+Authors: Mikayla Campbell, Bethany Van Meter, Joseph Goh
 """
 # check TODOs
 
@@ -17,7 +17,7 @@ import import_data
 
 
 class Student:
-    def __init__(self, first, last, id_num, email, cc_num, flag, num_flags):
+    def __init__(self, first: str, last: str, id_num: str, email: str, cc_num: int = 0, flag: bool = False, flag_ct: int = 0):
         # initialize all values.
         # We will end up reading in from a file each of these,
         # so it'll be easy to establish each of the values.
@@ -27,18 +27,86 @@ class Student:
         self.email = email
         self.cc_num = cc_num
         self.flag = flag
-        self.num_flags = num_flags
+        self.flag_ct = flag_ct
 
     def __str__(self):
         # simple string representation
-        return "[{}, {}, {}, {}]".format(self.first, self.last, self.id_num, self.email)
+        return "{} {} [{}, {}]".format(self.first, self.last, self.id_num, self.email)
 
     def __repr__(self):
         # to show all the values of an instance of a Student
         return "Student({}, {}, {}, {}, {}, {}, {})".format(self.first,
                                                             self.last, self.id_num, self.email, self.cc_num, self.flag,
-                                                            self.num_flags)
+                                                            self.flag_ct)
 
+    # Set flag and increment the flag count unless reset arg is set, in which case we clear the flag
+    def set_flag(self, reset: bool = False):
+        if reset:
+            self.flag = False
+            self.flag_ct = 0
+        else:
+            self.flag = True
+            self.flag_ct += 1
+
+
+# Contains the list of Students, as well as the randomizing functionality
+class Roster:
+    def __init__(self, filepath: str = "DO_NOT_TOUCH_class_summary.txt"):
+        self.students = []
+        self.size = 0
+        self.order = []
+        self._next = 0
+
+        with open(filepath, "r") as class_file:
+            current_line = class_file.readline().strip("\n")
+            while current_line != "":
+                first, last, id_num, email = current_line.split("\t")
+                self.students.append(Student(first, last, id_num, email))
+                self.size += 1
+                current_line = class_file.readline().strip("\n")
+
+        for i in range(self.size):
+            self.order.append(i)
+
+    def __repr__(self):
+        return "Roster({})".format(self.size)
+
+    def shuffle(self):
+        random.shuffle(self.order)
+        self._next = 0
+
+    def get_next(self) -> Student:
+        # If the next-index is larger than our entire roster, then we have an error
+        if self._next > self.size:
+            raise IndexError("The roster feed is out of bounds!")
+        # If we reached the end of the list, reshuffle the list
+        elif self._next == self.size:
+            self.shuffle()
+
+        # Increment the next-index
+        self._next += 1
+
+        return self.students[self.order[self._next]]
+
+
+# Deck object will contain the (by default) four students on deck
+# and automatically select random students to add to deck
+class Deck:
+    def __init__(self, roster: Roster, size: int = 4):
+        self.roster = roster
+        self.size = size
+        self.on_deck = []
+
+        for i in range(self.size):
+            self.on_deck[i] = self.roster.get_next()
+
+    def dequeue(self, idx: int, flag: bool = False) -> Student:
+        to_dequeue = self.on_deck[idx]
+        if flag:
+            to_dequeue.set_flag()
+        self.on_deck[idx] = self.roster.get_next()
+
+        return to_dequeue
 
 # TODO: change to create the class from file input
 def build_roster(summary_path: str = "DO_NOT_TOUCH_class_summary.txt") -> List[Student]:
