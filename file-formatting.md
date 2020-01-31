@@ -34,4 +34,7 @@ _**TBD**_
 
 We can decide on something that's easily readable output to a text file every action sounds good.
 
-In the mean time, listen to this great song: https://youtu.be/d0bJZGZ0s8U
+In the mean time, listen to either of these great songs:
+
+* https://youtu.be/d0bJZGZ0s8U
+* https://youtu.be/PN-zHSvDc1g
