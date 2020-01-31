@@ -18,6 +18,7 @@ TODO:
 from typing import List
 import random
 from os import path
+import csv
 
 import import_data
 
@@ -60,18 +61,22 @@ class Roster:
     def __init__(self, filepath: str = "DO_NOT_TOUCH_class_summary.txt"):
         self.filepath = filepath
         self.students = []
+        self.flagged = []
         self.size = 0
         self.order = []
         self._next = 0
 
         # TODO: Implement behavior for if class summary file is not found
-        with open(self.filepath, "r") as class_file:
-            current_line = class_file.readline().strip("\n")
-            while current_line != "":
-                first, last, id_num, email = current_line.split("\t")
-                self.students.append(Student(first, last, id_num, email))
+        with open(self.filepath, "r", newline='') as class_file:
+            reader = csv.reader(class_file, dialect='excel-tab', quoting=csv.QUOTE_NONE)
+            # Move past the header
+            next(reader)
+            for row in reader:
+                current_student = Student(row[0], row[1], row[2], row[3], int(row[4]), bool(row[5]), int(row[6]))
+                self.students.append(current_student)
+                if bool(row[5]):
+                    self.flagged.append(current_student)
                 self.size += 1
-                current_line = class_file.readline().strip("\n")
 
         for i in range(self.size):
             self.order.append(i)
@@ -96,6 +101,23 @@ class Roster:
 
         return self.students[self.order[self._next]]
 
+    def write_to_file(self):
+        rows = [
+            [s.first, s.last, s.id_num, s.email, str(s.cc_ct), str(int(s.flag)), str(s.flag_ct)] for s in self.students
+        ]
+        with open(self.filepath, "w", newline='') as class_file:
+            writer = csv.writer(class_file, dialect='excel-tab', quoting=csv.QUOTE_NONE)
+            writer.writerow(["FirstName", "LastName", "ID-Number", "Email", "ColdCallCount", "Flag", "FlagCount"])
+            writer.writerows(rows)
+
+        flagged_rows = [
+            [s.first, s.last, s.id_num, s.email, str(s.cc_ct), str(int(s.flag)), str(s.flag_ct)] for s in self.flagged
+        ]
+        with open(self.filepath[:-3] + "_flags.txt", "w", newline='') as flag_file:
+            writer = csv.writer(flag_file, dialect='excel-tab', quoting=csv.QUOTE_NONE)
+            writer.writerow(["FirstName", "LastName", "ID-Number", "Email", "ColdCallCount", "Flag", "FlagCount"])
+            writer.writerows(flagged_rows)
+
 
 # Deck object will contain the (by default) four students on deck
 # and automatically select random students to add to deck
@@ -112,7 +134,11 @@ class Deck:
     def dequeue(self, idx: int, flag: bool = False) -> Student:
         to_dequeue = self.on_deck[idx]
         to_dequeue.cc_ct += 1
+        # If the instructor is flagging the student, take appropriate actions
         if flag:
+            # If the student hasn't been flagged already, append them to the roster's flagged list
+            if not to_dequeue.flag:
+                self.roster.flagged.append(to_dequeue)
             to_dequeue.set_flag()
         self.on_deck[idx] = self.roster.get_next()
 
