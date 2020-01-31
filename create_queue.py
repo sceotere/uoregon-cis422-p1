@@ -7,7 +7,7 @@ Authors: Mikayla Campbell, Bethany Van Meter, Joseph Goh
 
 Last modified by: Joseph Goh
 
-Date last modified: 1/27/20
+Date last modified: 1/31/20
 
 TODO:
     * Deprecate functions not in objects (or integrate as necessary)

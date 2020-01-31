@@ -1,22 +1,28 @@
 """
 CIS 422 Project 1 Save Data
 
-Description: 
-
-Date Last Modified: 1/27/20
+Description: Parses class file
+into a list of students and their
+information
 
 Authors: Mikayla Campbell, Bethany Van Meter
+
+Last modified by: Joseph Goh
+
+Date last modified: 1/31/20
 """
 
 # Clean up and add comments
 
-from os import path
+from create_queue import *
 
 
 def save_term_summary(class_roster, class_name):
-    if path.exists("DO_NOT_TOUCH{}_class_summary.txt".format(class_name)):
+    if path.exists("DO_NOT_TOUCH{}_class_summary.txt" \
+                           .format(class_name)):
 
-        class_file = open("DO_NOT_TOUCH{}_class_summary.txt".format(class_name), "r")
+        class_file = open("DO_NOT_TOUCH{}_class_summary.txt" \
+                          .format(class_name), "r")
         output = []
         current_line = class_file.readline()
         output.append(current_line)
@@ -26,7 +32,7 @@ def save_term_summary(class_roster, class_name):
 
         students_used = []
 
-        while current_line:
+        while (current_line):
             first_name, last_name, number, email, cc_num, flags = current_line.split("\t")
             for student in class_roster:
                 if student.id_num == int(number):
@@ -49,7 +55,7 @@ def save_term_summary(class_roster, class_name):
         current_line = class_file.readline()
         current_line = class_file.readline().strip("\n")
 
-        while current_line:
+        while (current_line):
             first_name, last_name, number, email, cc_num, flags = current_line.split("\t")
             for student in class_roster:
                 if student.id_num == number and number not in students_used:
