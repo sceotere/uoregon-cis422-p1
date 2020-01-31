@@ -8,7 +8,6 @@ Date Last Modified: 		Last Modified by:		Completed:
 """
 
 from tkinter import *
-from tkinter import filedialog
 
 listOfNames = ["Bethany", "Mikayla", "Joseph", "Olivia", "Ben"]
 
