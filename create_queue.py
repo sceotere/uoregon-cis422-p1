@@ -17,7 +17,7 @@ import import_data
 
 
 class Student:
-    def __init__(self, first: str, last: str, id_num: str, email: str, cc_num: int = 0, flag: bool = False, flag_ct: int = 0):
+    def __init__(self, first: str, last: str, id_num: str, email: str, cc_ct: int = 0, flag: bool = False, flag_ct: int = 0):
         # initialize all values.
         # We will end up reading in from a file each of these,
         # so it'll be easy to establish each of the values.
@@ -25,7 +25,7 @@ class Student:
         self.last = last
         self.id_num = id_num
         self.email = email
-        self.cc_num = cc_num
+        self.cc_ct = cc_ct
         self.flag = flag
         self.flag_ct = flag_ct
 
@@ -36,7 +36,7 @@ class Student:
     def __repr__(self):
         # to show all the values of an instance of a Student
         return "Student({}, {}, {}, {}, {}, {}, {})".format(self.first,
-                                                            self.last, self.id_num, self.email, self.cc_num, self.flag,
+                                                            self.last, self.id_num, self.email, self.cc_ct, self.flag,
                                                             self.flag_ct)
 
     # Set flag and increment the flag count unless reset arg is set, in which case we clear the flag
@@ -100,13 +100,16 @@ class Deck:
         for i in range(self.size):
             self.on_deck[i] = self.roster.get_next()
 
+    # dequeue should increment the Student's cc count, flag if appropriate, and load in a new Student
     def dequeue(self, idx: int, flag: bool = False) -> Student:
         to_dequeue = self.on_deck[idx]
+        to_dequeue.cc_ct += 1
         if flag:
             to_dequeue.set_flag()
         self.on_deck[idx] = self.roster.get_next()
 
         return to_dequeue
+
 
 # TODO: change to create the class from file input
 def build_roster(summary_path: str = "DO_NOT_TOUCH_class_summary.txt") -> List[Student]:
