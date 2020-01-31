@@ -1,11 +1,17 @@
 """
 CIS 422 Project 1 Queue
 
-Description: 
-
-Date Last Modified: 1/27/20
+Description: The object classes for students and student data handling is implemented here.
 
 Authors: Mikayla Campbell, Bethany Van Meter, Joseph Goh
+
+Last modified by: Joseph Goh
+
+Date last modified: 1/27/20
+
+TODO:
+    * Deprecate functions not in objects (or integrate as necessary)
+    * Design and implement various error handling
 """
 # check TODOs
 
@@ -57,6 +63,7 @@ class Roster:
         self.order = []
         self._next = 0
 
+        # TODO: Implement behavior for if class summary file is not found
         with open(filepath, "r") as class_file:
             current_line = class_file.readline().strip("\n")
             while current_line != "":
@@ -111,7 +118,7 @@ class Deck:
         return to_dequeue
 
 
-# TODO: change to create the class from file input
+# TODO: Deprecate this
 def build_roster(summary_path: str = "DO_NOT_TOUCH_class_summary.txt") -> List[Student]:
     current_class = []
     if path.exists(summary_path):
@@ -121,7 +128,6 @@ def build_roster(summary_path: str = "DO_NOT_TOUCH_class_summary.txt") -> List[S
                          ["John", "Doe", 390847638, "john@gmail.com"],
                          ["Sarah", "Davis", 278938475, "sarah@gmail.com"],
                          ["Beth", "Lee", 904895098, "beth@gmail.com"]]
-    # TODO: Implement behavior for if class summary file is not found
     else:
         current_class = import_data.parse_class_roster("test_class.txt")
 
@@ -137,12 +143,14 @@ def build_roster(summary_path: str = "DO_NOT_TOUCH_class_summary.txt") -> List[S
     return class_roster
 
 
+# TODO: Deprecate this
 def randomize_li(class_li):
     # use Python's built in shuffle function
     random.shuffle(class_li)
     return class_li
 
 
+# TODO: Deprecate this
 # for the initial creation of the "on deck" queue
 def make_q(class_li):
     # each queue has 4 "on deck" students
@@ -162,6 +170,7 @@ def make_q(class_li):
     return q, class_li_short
 
 
+# TODO: Deprecate this
 # remove the student the user wants to remove and returns a 3 student list
 # (acts as a shift after removal)
 # TODO: determine here if the removal was flagged or not
@@ -173,6 +182,7 @@ def shift_q(num, q):
     return q
 
 
+# TODO: Deprecate this
 # adds a student to the end of the queue
 def add_to_q(q, class_li):
     # if class_li (students not called yet) is empty, fill it again
