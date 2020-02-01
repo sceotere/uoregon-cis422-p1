@@ -58,7 +58,7 @@ class Student:
 
 # Contains the list of Students, as well as the randomizing functionality
 class Roster:
-    def __init__(self, deck_size: int = 4, filepath: str = "DO_NOT_TOUCH_class_summary.txt"):
+    def __init__(self, deck_size: int = 4, filepath: str = "DO_NOT_TOUCH_class_summary.txt", use_conf: bool = False):
         self.filepath = filepath
 
         self.students = []
@@ -85,10 +85,11 @@ class Roster:
                 self.size += 1
 
         # Check for config data saved from previous sessions and fill deck accordingly
-        # Check for saved coldcall.ini
-        if path.exists("coldcall.ini"):
+        # Check saved coldcall.ini if we're restoring from a previous session.
+        if use_conf:
             with open("coldcall.ini", "r") as conf_file:
-                # Check the file path, see if it fits what we're looking at. If not, this config is outdated so return
+                # Check the file path, see if it fits what we're looking at.
+                # If not, this config is outdated so do the default init
                 if self.filepath == conf_file.readline().strip("\n").split("=")[1]:
                     # Grab next up index
                     self._next = int(conf_file.readline().strip("\n").split("=")[1])
@@ -105,12 +106,17 @@ class Roster:
                         for i in range(self.size):
                             self.order.append(i)
                 else:
-                    return
+                    for i in range(self.size):
+                        self.order.append(i)
+                    self.shuffle()
+                    for i in range(self.deck_size):
+                        self.on_deck.append(self.get_next_idx())
         else:
             for i in range(self.size):
-                self.on_deck[i] = self.get_next_idx()
-            for i in range(self.size):
                 self.order.append(i)
+            self.shuffle()
+            for i in range(self.deck_size):
+                self.on_deck.append(self.get_next_idx())
 
     def __repr__(self):
         return "Roster({})".format(self.size)
