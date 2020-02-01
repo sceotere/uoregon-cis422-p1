@@ -85,28 +85,32 @@ class Roster:
                 self.size += 1
 
         # Check for config data saved from previous sessions and fill deck accordingly
-        # Check for saved shuffled order
-        if path.exists("order.txt"):
-            with open("order.txt", "r") as order_file:
-                # The items of the line, converted to ints, then put back into a list
-                self.order = [int(i) for i in order_file.readline().strip("\n").split("\t")]
-        else:
-            for i in range(self.size):
-                self.order.append(i)
-
         # Check for saved coldcall.ini
         if path.exists("coldcall.ini"):
             with open("coldcall.ini", "r") as conf_file:
-                # Skip file path
-                conf_file.readline()
-                # Grab next up index
-                self._next = int(conf_file.readline().strip("\n").split("=")[1])
-                # The text after the equals sign, split by commas, then converted to ints, put into a list
-                self.on_deck = [int(i) for i in conf_file.readline().strip("\n").split("=")[1].split(",")]
-                self.deck_size = len(self.on_deck)
+                # Check the file path, see if it fits what we're looking at. If not, this config is outdated so return
+                if self.filepath == conf_file.readline().strip("\n").split("=")[1]:
+                    # Grab next up index
+                    self._next = int(conf_file.readline().strip("\n").split("=")[1])
+                    # The text after the equals sign, split by commas, then converted to ints, put into a list
+                    self.on_deck = [int(i) for i in conf_file.readline().strip("\n").split("=")[1].split(",")]
+                    self.deck_size = len(self.on_deck)
+
+                    # Check for saved shuffled order
+                    if path.exists("order.txt"):
+                        with open("order.txt", "r") as order_file:
+                            # The items of the line, converted to ints, then put back into a list
+                            self.order = [int(i) for i in order_file.readline().strip("\n").split("\t")]
+                    else:
+                        for i in range(self.size):
+                            self.order.append(i)
+                else:
+                    return
         else:
             for i in range(self.size):
                 self.on_deck[i] = self.get_next_idx()
+            for i in range(self.size):
+                self.order.append(i)
 
     def __repr__(self):
         return "Roster({})".format(self.size)
