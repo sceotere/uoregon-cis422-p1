@@ -87,13 +87,16 @@ def downPress(event):
     global listOfSlots
     pass
 
+listOfNames = ["Press", "the", "Import", "Button!"]
 
+"""
 # Initialize listOfNames
 listOfNames = [StringVar(), StringVar(), StringVar(), StringVar()]
 listOfNames[0].set("Press")
 listOfNames[1].set("the")
 listOfNames[2].set("Import")
 listOfNames[3].set("Button!")
+"""
 
 # Try to initialize Roster and listOfNames and deck if we have a previous session already saved
 if path.exists("coldcall.ini"):
