@@ -26,17 +26,24 @@ global listOfNames
 global listOfSlots
 
 # Import filepath and return it for use
+def updateUI():
+    for i in range(4):
+        current_student = roster.get_student(i)
+        listOfNames[i] = current_student.first + " " + current_student.last[0] + "."
+        listOfSlots[i].config({"text": listOfNames[i]})
+
+
 def imprt():
     global currentSlot
     global listOfNames
     global listOfSlots
+    global roster
 
     filepath = filedialog.askopenfilename(initialdir="./..")
     if path.exists(filepath):
         roster = Roster(filepath=filepath)
-        for i in range(4):
-            current_student = roster.students[roster.on_deck[i]]
-            listOfNames[i] = current_student.first + " " + current_student.last[0] + "."
+        updateUI()
+        roster.save_state()
 
 # Export
 def exprt():
@@ -77,7 +84,10 @@ def upPress(event):
     global currentSlot
     global listOfNames
     global listOfSlots
-    pass
+    roster.dequeue(currentSlot, False)
+    updateUI()
+    roster.save_state()
+
 
 
 def downPress(event):
@@ -85,7 +95,9 @@ def downPress(event):
     global currentSlot
     global listOfNames
     global listOfSlots
-    pass
+    roster.dequeue(currentSlot, True)
+    updateUI()
+    roster.save_state()
 
 listOfNames = ["Press", "the", "Import", "Button!"]
 
@@ -104,9 +116,7 @@ if path.exists("coldcall.ini"):
         conf_filepath = conf_file.readline()
         if path.exists(conf_filepath):
             roster = Roster(filepath=conf_filepath)
-            for i in range(4):
-                current_student = roster.students[roster.on_deck[i]]
-                listOfNames[i] = current_student.first + " " + current_student.last[0] + "."
+            updateUI()
 
 # sets window size and background color
 win = Tk()
