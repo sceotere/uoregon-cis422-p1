@@ -97,6 +97,9 @@ class Roster:
         # Check for saved coldcall.ini
         if path.exists("coldcall.ini"):
             with open("coldcall.ini", "r") as conf_file:
+                # Skip file path
+                conf_file.readline()
+                # Grab next up index
                 self._next = int(conf_file.readline().strip("\n").split("=")[1])
                 # The text after the equals sign, split by commas, then converted to ints, put into a list
                 self.on_deck = [int(i) for i in conf_file.readline().strip("\n").split("=")[1].split(",")]
