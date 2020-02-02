@@ -84,36 +84,39 @@ class Roster:
                     self.flagged.append(current_student)
                 self.size += 1
 
+        # First, do the default build of self.order
+        for i in range(self.size):
+            self.order.append(i)
+
         # Check for config data saved from previous sessions and fill deck accordingly
         # Check saved coldcall.ini if we're restoring from a previous session.
         if use_conf:
             with open("coldcall.ini", "r") as conf_file:
-                # Check the file path, see if it fits what we're looking at.
+                # Check the file path, see if it's valid and properly formatted'.
                 # If not, this config is outdated so do the default init
-                if self.filepath == conf_file.readline().strip("\n").split("=")[1]:
-                    # Grab next up index
-                    self._next = int(conf_file.readline().strip("\n").split("=")[1])
+                path_line = conf_file.readline().strip("\n").split("=")
+                if len(path_line) == 2 and path.exists(path_line[1]) and path_line[1] == self.filepath:
                     # The text after the equals sign, split by commas, then converted to ints, put into a list
-                    self.on_deck = [int(i) for i in conf_file.readline().strip("\n").split("=")[1].split(",")]
-                    self.deck_size = len(self.on_deck)
+                    saved_deck = [int(i) for i in conf_file.readline().strip("\n").split("=")[1].split(",")]
+                    if self.deck_size == len(saved_deck):
+                        self.on_deck = saved_deck
 
-                    # Check for saved shuffled order
+                    # Check for saved shuffled order and load it if its length is valid
                     if path.exists("order.txt"):
                         with open("order.txt", "r") as order_file:
                             # The items of the line, converted to ints, then put back into a list
-                            self.order = [int(i) for i in order_file.readline().strip("\n").split("\t")]
-                    else:
-                        for i in range(self.size):
-                            self.order.append(i)
+                            saved_order = [int(i) for i in order_file.readline().strip("\n").split("\t")]
+                            if len(saved_order) == self.size:
+                                self.order = saved_order
+
+                    # Grab next up index
+                    self._next = int(conf_file.readline().strip("\n").split("=")[1])
                 else:
-                    for i in range(self.size):
-                        self.order.append(i)
                     self.shuffle()
                     for i in range(self.deck_size):
                         self.on_deck.append(self.get_next_idx())
+        # If we're not using config data, just shuffle and build the deck to finish
         else:
-            for i in range(self.size):
-                self.order.append(i)
             self.shuffle()
             for i in range(self.deck_size):
                 self.on_deck.append(self.get_next_idx())
@@ -155,11 +158,11 @@ class Roster:
             if not to_dequeue.flag:
                 self.flagged.append(to_dequeue)
             to_dequeue.set_flag()
-        #shift all the entries down 1, and add a new person on the end
+        # Shift all the entries down 1, and add a new person on the end
         i = n
         while i < 3:
             self.on_deck[i] = self.on_deck[i+1]
-            i+=1
+            i += 1
         self.on_deck[3] = self.get_next_idx()
 
 
