@@ -111,13 +111,18 @@ listOfNames[3].set("Button!")
 """
 
 # Try to initialize Roster and listOfNames and deck if we have a previous session already saved
+
+#FIXME
+#This doesn't work right now
+"""
 if path.exists("coldcall.ini"):
     with open("coldcall.ini", "r") as conf_file:
-        conf_filepath = conf_file.readline()
+        conf_filepath = conf_file.readline().strip("\n").split("=")[1]
+        print(conf_filepath)
         if path.exists(conf_filepath):
-            roster = Roster(filepath=conf_filepath)
+            roster = Roster(filepath=conf_filepath,use_conf=True)
             updateUI()
-
+"""
 # sets window size and background color
 win = Tk()
 win.geometry("350x150")
