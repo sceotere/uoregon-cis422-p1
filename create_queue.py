@@ -155,7 +155,13 @@ class Roster:
             if not to_dequeue.flag:
                 self.flagged.append(to_dequeue)
             to_dequeue.set_flag()
-        self.on_deck[n] = self.get_next_idx()
+        #shift all the entries down 1, and add a new person on the end
+        i = n
+        while i < 3:
+            self.on_deck[i] = self.on_deck[i+1]
+            i+=1
+        self.on_deck[3] = self.get_next_idx()
+
 
         return to_dequeue
 
