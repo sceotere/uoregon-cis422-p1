@@ -15,6 +15,61 @@ Date last modified: 1/31/20
 # Clean up and add comments
 
 from create_queue import *
+from datetime import date
+
+
+def save_roster(roster: Roster):
+    # Update the class summary
+    rows = [
+        [s.first, s.last, s.id_num, s.email, str(s.cc_ct), str(int(s.flag)), str(s.flag_ct)] for s in roster.students
+    ]
+    with open(roster.filepath, "w", newline='') as class_file:
+        writer = csv.writer(class_file, dialect='excel-tab', quoting=csv.QUOTE_NONE)
+        writer.writerow(["FirstName", "LastName", "ID-Number", "Email", "ColdCallCount", "Flag", "FlagCount"])
+        writer.writerows(rows)
+
+    # Create/Update the summary of flagged students
+    flagged_rows = [
+        [s.first, s.last, s.id_num, s.email, str(s.cc_ct), str(int(s.flag)), str(s.flag_ct)] for s in roster.flagged
+    ]
+    with open(roster.filepath[:-3] + "_flags.txt", "w", newline='') as flag_file:
+        writer = csv.writer(flag_file, dialect='excel-tab', quoting=csv.QUOTE_NONE)
+        writer.writerow(["FirstName", "LastName", "ID-Number", "Email", "ColdCallCount", "Flag", "FlagCount"])
+        writer.writerows(flagged_rows)
+
+    # Store the current shuffled order of student indices
+    order_row = [str(idx) for idx in roster.order]
+    with open("order.txt", "w", newline='') as order_file:
+        writer = csv.writer(order_file, dialect='excel-tab', quoting=csv.QUOTE_NONE)
+        writer.writerow(order_row)
+
+    # Store other session state info in config file
+    with open("coldcall.ini", "w") as conf_file:
+        conf_file.write("rosterpath=" + roster.filepath + "\n")
+        conf_file.write("ondeck=" + ",".join([str(idx) for idx in roster.on_deck]) + "\n")
+        conf_file.write("nextindex=" + str(roster._next) + "\n")
+
+
+def log_call(student: Student, flagged: bool = False, log_path: str = "log.txt"):
+    with open(log_path, "a") as log:
+        output = f"{student.first} {student.last} ({student.email}) was called for a total of {student.cc_ct} times."
+        if flagged:
+            output += f" The student was also flagged for a total of {student.flag_ct} times."
+        output += "\n"
+
+        log.write(output)
+
+
+def log_import(roster_path: str, log_path: str = "log.txt"):
+    with open(log_path, "a") as log:
+        output = f"Class roster located at \"{roster_path}\" imported.\n"
+        log.write(output)
+
+
+def log_startup(log_path: str = "log.txt"):
+    with open(log_path, "a") as log:
+        output = f"Cold-Call app opened on {date.today()}\n"
+        log.write(output)
 
 
 def save_term_summary(class_roster, class_name):
