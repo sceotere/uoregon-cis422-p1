@@ -19,20 +19,22 @@ from tkinter import *
 from tkinter import filedialog
 
 from create_queue import *
+from save_data import *
 
 global roster
 global currentSlot
 global listOfNames
 global listOfSlots
 
-# Import filepath and return it for use
-def updateUI():
+
+def update_ui():
     for i in range(4):
         current_student = roster.get_student(i)
         listOfNames[i] = current_student.first + " " + current_student.last[0] + "."
         listOfSlots[i].config({"text": listOfNames[i]})
 
 
+# Import filepath and return it for use
 def imprt():
     global currentSlot
     global listOfNames
@@ -42,8 +44,10 @@ def imprt():
     filepath = filedialog.askopenfilename(initialdir="./..")
     if path.exists(filepath):
         roster = Roster(filepath=filepath)
-        updateUI()
-        roster.save_state()
+        update_ui()
+        save_roster(roster)
+        log_import(filepath)
+
 
 # Export
 def exprt():
@@ -84,10 +88,10 @@ def upPress(event):
     global currentSlot
     global listOfNames
     global listOfSlots
-    roster.dequeue(currentSlot, False)
-    updateUI()
-    roster.save_state()
-
+    dequeued = roster.dequeue(currentSlot, False)
+    update_ui()
+    save_roster(roster)
+    log_call(dequeued)
 
 
 def downPress(event):
@@ -95,28 +99,24 @@ def downPress(event):
     global currentSlot
     global listOfNames
     global listOfSlots
-    roster.dequeue(currentSlot, True)
-    updateUI()
-    roster.save_state()
+    dequeued = roster.dequeue(currentSlot, True)
+    update_ui()
+    save_roster(roster)
+    log_call(dequeued, flagged=True)
+
+
+log_startup()
 
 listOfNames = ["Press", "the", "Import", "Button!"]
-
-"""
-# Initialize listOfNames
-listOfNames = [StringVar(), StringVar(), StringVar(), StringVar()]
-listOfNames[0].set("Press")
-listOfNames[1].set("the")
-listOfNames[2].set("Import")
-listOfNames[3].set("Button!")
-"""
 
 # Try to initialize Roster and listOfNames and deck if we have a previous session already saved
 if path.exists("coldcall.ini"):
     with open("coldcall.ini", "r") as conf_file:
         conf_filepath = conf_file.readline().strip("\n").split("=")[1]
-        print(conf_filepath)
+        print(f"Attempting to load previous session from: {conf_filepath}")
         if path.exists(conf_filepath):
             roster = Roster(filepath=conf_filepath, use_conf=True)
+            log_import(conf_filepath)
 
 # sets window size and background color
 win = Tk()
@@ -167,6 +167,6 @@ win.bind('<Right>', rightPress)
 win.bind('<Up>', upPress)
 win.bind('<Down>', downPress)
 
-updateUI()
+update_ui()
 
 win.mainloop()

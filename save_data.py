@@ -68,7 +68,7 @@ def log_import(roster_path: str, log_path: str = "log.txt"):
 
 def log_startup(log_path: str = "log.txt"):
     with open(log_path, "a") as log:
-        output = f"Cold-Call app opened on {date.today()}\n"
+        output = f"----------------------------------------\nCold-Call app opened on {date.today()}\n"
         log.write(output)
 
 
