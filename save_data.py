@@ -52,9 +52,9 @@ def save_roster(roster: Roster):
 
 def log_call(student: Student, flagged: bool = False, log_path: str = "log.txt"):
     with open(log_path, "a") as log:
-        output = f"{student.first} {student.last} ({student.email}) was called for a total of {student.cc_ct} times."
+        output = "{} {} ({}) was called for a total of {} times.".format(student.first, student.last, student.email, student.cc_ct)
         if flagged:
-            output += f" The student was also flagged for a total of {student.flag_ct} times."
+            output += " The student was also flagged for a total of {} times.".format(student.flag_ct)
         output += "\n"
 
         log.write(output)
@@ -62,13 +62,13 @@ def log_call(student: Student, flagged: bool = False, log_path: str = "log.txt")
 
 def log_import(roster_path: str, log_path: str = "log.txt"):
     with open(log_path, "a") as log:
-        output = f"Class roster located at \"{roster_path}\" imported.\n"
+        output = "Class roster located at \"{}\" imported.\n".format(roster_path)
         log.write(output)
 
 
 def log_startup(log_path: str = "log.txt"):
     with open(log_path, "a") as log:
-        output = f"----------------------------------------\nCold-Call app opened on {date.today()}\n"
+        output = "----------------------------------------\nCold-Call app opened on {}\n".format(date.today())
         log.write(output)
 
 
