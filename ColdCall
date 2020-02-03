@@ -2,4 +2,4 @@ cd "$(dirname "$0")"
 set backslash_quote="yes"
 osascript -e "tell application \"System Events\" to set visible of some item of (get processes whose name=\"Terminal\") to false"
 clear
-python3 cold_call_files/ui.py
+python3 source/ui.py
