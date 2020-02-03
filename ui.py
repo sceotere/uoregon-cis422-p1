@@ -29,7 +29,7 @@ global listOfSlots
 
 def update_ui():
     for i in range(4):
-        current_student = roster.get_student(i)
+        current_student = roster.get_student(roster.on_deck[i])
         listOfNames[i] = current_student.first + " " + current_student.last[0] + "."
         listOfSlots[i].config({"text": listOfNames[i]})
 
