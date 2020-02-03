@@ -46,7 +46,8 @@ def imprt():
 def exprt():
     global roster
 
-    filepath = filedialog.asksaveasfilename(initialdir="./..")
+    filepath = filedialog.asksaveasfilename(initialdir="./..", filetypes=(("TAB-delimited text files", "*.txt"),
+                                                                          ("all files", "*.*")))
     save_roster(roster, filepath, export=True)
 
 
