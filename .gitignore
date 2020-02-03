@@ -1,6 +1,7 @@
 # Untracked files
 .DS_Store
 thumbs.db
+__pycache__
 
 # Program generated files
 *.ini
