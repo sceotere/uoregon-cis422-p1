@@ -28,12 +28,20 @@ class Student:
         # initialize all values.
         # We will end up reading in from a file each of these,
         # so it'll be easy to establish each of the values.
+
+        # First name
         self.first = first
+        # Last name
         self.last = last
+        # Student ID number
         self.id_num = id_num
+        # Email address
         self.email = email
+        # Cold-call count (total number of times called)
         self.cc_ct = cc_ct
+        # Whether student has been flagged
         self.flag = flag
+        # Flag count (total number of times student has been flagged)
         self.flag_ct = flag_ct
 
     def __str__(self):
@@ -46,7 +54,7 @@ class Student:
                                                             self.last, self.id_num, self.email, self.cc_ct, self.flag,
                                                             self.flag_ct)
 
-    # Set flag and increment the flag count unless reset arg is set, in which case we clear the flag
+    # Set flag and increment the flag count unless reset arg is set, in which case we clear the flag and the flag count
     def set_flag(self, reset: bool = False):
         if reset:
             self.flag = False
@@ -58,17 +66,28 @@ class Student:
 
 # Contains the list of Students, as well as the randomizing functionality
 class Roster:
-    def __init__(self, deck_size: int = 4, filepath: str = "DO_NOT_TOUCH_class_summary.txt", use_conf: bool = False):
+    def __init__(self, deck_size: int = 4, filepath: str = "class_roster.txt", use_conf: bool = False):
+        # The path of the main roster summary file
         self.filepath = filepath
 
+        # The list containing Student objects that account for the entire class
         self.students = []
+        # The list containing the indices (relevant to self.students) of students who have been flagged
         self.flagged = []
+        # The total number of students in the roster
         self.size = 0
 
+        # The list of indices (relevant to self.students) that are randomly shuffled and saved
+        # to indicate the order in which Students will be put on deck
         self.order = []
+        # The index (relative to self.order) indicating which student is to be queued
         self._next = 0
 
+        # The list of indices (relevant to self.students) that represent, in order of display,
+        # the students currently on deck
         self.on_deck = []
+        # The size of the deck. In practice, this will always be initialized to 4
+        # unless GUI support for variable deck size is to be implemented
         self.deck_size = deck_size
 
         # TODO: Implement behavior for if class summary file is not found
@@ -124,10 +143,14 @@ class Roster:
     def __repr__(self):
         return "Roster({})".format(self.size)
 
+    # Shuffles self.order to create a pseudo-random order of students to be queued
+    # and resets self._next index back to the head of self.order
     def shuffle(self):
         random.shuffle(self.order)
         self._next = 0
 
+    # Returns the next Student index (relative to self.students) to be put on deck
+    # and internally handles self._next incrementing and avoiding putting duplicate students on deck
     def get_next_idx(self) -> int:
         # If the next-index is larger than our entire roster, then we have an error
         if self._next > self.size:
@@ -157,7 +180,7 @@ class Roster:
 
         return ret
 
-    # Get the nth Student on deck
+    # Get the nth Student on deck (or from self.students if from_deck is set to False)
     def get_student(self, n: int, from_deck: bool = True):
         if from_deck:
             return self.students[self.on_deck[n]]
@@ -165,6 +188,7 @@ class Roster:
             return self.students[n]
 
     # Dequeue the nth Student on deck, grab the next one, and then return the dequeued Student
+    # If flag is set to True, the student will also be flagged.
     def dequeue(self, n: int, flag: bool = False) -> Student:
         to_dequeue = self.students[self.on_deck[n]]
         to_dequeue.cc_ct += 1
@@ -180,6 +204,5 @@ class Roster:
             self.on_deck[i] = self.on_deck[i+1]
             i += 1
         self.on_deck[3] = self.get_next_idx()
-
 
         return to_dequeue
