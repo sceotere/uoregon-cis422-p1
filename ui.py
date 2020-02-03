@@ -21,13 +21,11 @@ from tkinter import filedialog
 from create_queue import *
 from save_data import *
 
-global roster
-global currentSlot
-global listOfNames
-global listOfSlots
-
 
 def update_ui():
+    global listOfNames
+    global listOfSlots
+    global roster
     for i in range(4):
         current_student = roster.get_student(i)
         listOfNames[i] = current_student.first + " " + current_student.last[0] + "."
@@ -107,6 +105,7 @@ def downPress(event):
 
 log_startup()
 
+roster = None
 listOfNames = ["Press", "the", "Import", "Button!"]
 
 # Try to initialize Roster and listOfNames and deck if we have a previous session already saved
@@ -167,6 +166,11 @@ win.bind('<Right>', rightPress)
 win.bind('<Up>', upPress)
 win.bind('<Down>', downPress)
 
-update_ui()
+if roster is None:
+    for i in range(4):
+        listOfSlots[i].config({"text": listOfNames[i]})
+else:
+    update_ui()
+
 
 win.mainloop()
