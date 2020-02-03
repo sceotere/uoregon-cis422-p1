@@ -6,20 +6,18 @@ Description: Contains the Tkinter GUI window
 Authors: Olivia Pannell, Ben Verney, Joseph Goh
 
 Date Last Modified: 		Last Modified by:		Completed:
-1/31/20  					Joseph Goh			    Basic window and structure
+2/03/20  					Joseph Goh			    Most functionality
 
-TODO:
-* Change name labels to use StringVars instead of regular strings, so that they can be automatically updated
-* Add always-on-top functionality
-    (This should be done at an OS X workstation, as the solution is OS specific)
+TODO: Update comments
 
 """
 
 from tkinter import *
 from tkinter import filedialog
+from os import path
 
-from create_queue import *
-from save_data import *
+from cold_call_files.create_queue import *
+from cold_call_files.save_data import *
 
 
 def update_ui():
@@ -34,9 +32,6 @@ def update_ui():
 
 # Import filepath and return it for use
 def imprt():
-    global currentSlot
-    global listOfNames
-    global listOfSlots
     global roster
 
     filepath = filedialog.askopenfilename(initialdir="./..")
@@ -49,10 +44,18 @@ def imprt():
 
 # Export
 def exprt():
-    pass
+    global roster
+
+    filepath = filedialog.asksaveasfilename(initialdir="./..")
+    save_roster(roster, filepath, export=True)
 
 
-# do another thing
+# Reset the flags of all the students in the currently loaded roster
+def reset_flags():
+    global roster
+    for i in range(roster.size):
+        roster.students[i].set_flag(reset=True)
+    save_roster(roster)
 
 
 def leftPress(event):
@@ -121,7 +124,7 @@ if path.exists("coldcall.ini"):
 win = Tk()
 win.geometry("350x150")
 win.config(bg="#002547")
-win.resizable(False, False)
+win.resizable(True, False)
 win.attributes('-topmost', 'true')
 
 # win.iconbitmap()
@@ -132,7 +135,7 @@ win.title("422 Cold Call")
 
 # Labels and Buttons
 lbl1 = Label(win, text='On Deck:', bg="#002547", fg="white", font=("Arial", 16))
-lbl1.grid(row=0, column=1, padx=5, pady=5)
+lbl1.grid(row=0, column=1, padx=5, pady=5, sticky=W)
 
 slot0 = Label(win, text=listOfNames[0], bg="#69779b", fg="white", padx=10,
               relief=RAISED)  # Not sure if we like RAISED or SUNKEN
@@ -150,11 +153,14 @@ slot3.grid(row=1, column=4, padx=5, pady=5)
 lbl2 = Label(win, text="Help: \nDequeue - up\nFlag - down", bg="#002547", fg="white", font=("Arial", 12))
 lbl2.place(relx=1.0, rely=1.0, anchor=SE)
 
-b2 = Button(win, text="Import", highlightbackground="#002547", padx=10, command=imprt)
-b2.place(relx=0.0, rely=1.0, anchor=SW)
+b0 = Button(win, text="Import", highlightbackground="#002547", padx=10, command=imprt)
+b0.place(relx=0.0, rely=1.0, anchor=SW)
 
-b3 = Button(win, text="Export", highlightbackground="#002547", padx=10, command=exprt)
-b3.place(relx=0.20, rely=1.0, anchor=SW)
+b1 = Button(win, text="Export", highlightbackground="#002547", padx=10, command=exprt)
+b1.place(relx=0.20, rely=1.0, anchor=SW)
+
+b2 = Button(win, text="Reset Flags", highlightbackground="#002547", padx=10, command=reset_flags)
+b2.place(relx=0.40, rely=1.0, anchor=SW)
 
 listOfSlots = [slot0, slot1, slot2, slot3]
 currentNames = [0, 1, 2, 3]
