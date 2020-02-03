@@ -123,7 +123,7 @@ if path.exists("coldcall.ini"):
 
 # sets window size and background color
 win = Tk()
-win.geometry("800x185")
+win.geometry("775x185")
 win.config(bg="#002547")
 win.resizable(True, False)
 win.attributes('-topmost', 'true')
@@ -162,7 +162,7 @@ b2 = Button(win, text="Reset Flags", highlightbackground="#002547", padx=5, comm
 b2.place(relx=0.16, rely=1.0, anchor=SW)
 
 error = Label(win, text='Import failed! You may have the wrong roster format', bg="#002547", fg="white", font=("Arial", 16))
-error.place(relx=-2.0, anchor=SE)
+#error.place(relx=-2.0, anchor=SE)
 
 
 
