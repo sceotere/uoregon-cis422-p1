@@ -136,10 +136,26 @@ class Roster:
         elif self._next == self.size:
             self.shuffle()
 
+        # Save the student index to be returned
+        ret = self.order[self._next]
         # Increment the next-index
         self._next += 1
 
-        return self.order[self._next]
+        # If the roster doesn't contain enough students to prevent duplicates on deck, so be it. Just return.
+        if self.deck_size >= self.size:
+            return ret
+        # Else, check if the student being returned is already on deck. Loop for one that isn't til we find one.
+        else:
+            while ret in self.on_deck:
+                # Shuffle if we've reached the end of the list
+                if self._next == self.size:
+                    self.shuffle()
+                # Save the student index to be returned
+                ret = self.order[self._next]
+                # Increment the next-index
+                self._next += 1
+
+        return ret
 
     # Get the nth Student on deck
     def get_student(self, n: int, from_deck: bool = True):
