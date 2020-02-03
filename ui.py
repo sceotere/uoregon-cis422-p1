@@ -112,7 +112,7 @@ listOfNames = ["Press", "the", "Import", "Button!"]
 if path.exists("coldcall.ini"):
     with open("coldcall.ini", "r") as conf_file:
         conf_filepath = conf_file.readline().strip("\n").split("=")[1]
-        print(f"Attempting to load previous session from: {conf_filepath}")
+        print("Attempting to load previous session from: {}".format(conf_filepath))
         if path.exists(conf_filepath):
             roster = Roster(filepath=conf_filepath, use_conf=True)
             log_import(conf_filepath)
