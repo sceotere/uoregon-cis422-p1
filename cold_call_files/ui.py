@@ -122,6 +122,7 @@ win = Tk()
 win.geometry("350x150")
 win.config(bg="#002547")
 win.resizable(False, False)
+win.attributes('-topmost', 'true')
 
 # win.iconbitmap()
 # do this if I have time.
