@@ -2,9 +2,8 @@
 .DS_Store
 thumbs.db
 __pycache__
+test
 
 # Program generated files
 *.ini
 *.txt
-!test_class.txt
-!/test/*
