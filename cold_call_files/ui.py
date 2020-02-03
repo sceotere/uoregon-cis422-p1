@@ -16,8 +16,8 @@ from tkinter import *
 from tkinter import filedialog
 from os import path
 
-from cold_call_files.create_queue import *
-from cold_call_files.save_data import *
+from create_queue import *
+from save_data import *
 
 
 def update_ui():

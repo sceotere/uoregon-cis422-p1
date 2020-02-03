@@ -15,7 +15,7 @@ Date last modified: 1/31/20
 import csv
 from datetime import date
 
-from cold_call_files.create_queue import *
+from create_queue import *
 
 
 # Takes a Roster object and saves it to the designated path, dest_path, as a tab delimited file
