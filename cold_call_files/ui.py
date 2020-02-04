@@ -14,6 +14,7 @@ TODO: Update comments
 
 from tkinter import *
 from tkinter import filedialog
+from tkinter import messagebox
 from os import path
 
 from create_queue import *
@@ -37,12 +38,15 @@ def imprt():
     filepath = filedialog.askopenfilename(initialdir="./..")
     if path.exists(filepath):
         roster = Roster(filepath=filepath)
-        update_ui()
-        save_roster(roster)
-        log_import(filepath)
+        if roster.error_num != 0:
+            display_error(roster.error_num)
+        else:
+            update_ui()
+            save_roster(roster)
+            log_import(filepath)
 
 
-#Export
+# Export current state of roster to custom filepath
 def exprt():
     global roster
 
@@ -57,6 +61,18 @@ def reset_flags():
     for i in range(roster.size):
         roster.students[i].set_flag(reset=True)
     save_roster(roster)
+
+
+def display_error(error_num: int):
+    error_msg = {
+        0: "No error detected.",
+        1: "File could not be found (import failed).",
+        2: "File formatting is invalid (import failed).",
+        3: "Config file is invalid (previous session failed to import)."
+    }
+
+    messagebox.showwarning("Warning", error_msg[error_num])
+
 
 
 def leftPress(event):
@@ -161,12 +177,6 @@ b1.place(relx=0.12, rely=1.0, anchor=SW)
 b2 = Button(win, text="Reset Flags", highlightbackground="#002547", padx=10, command=reset_flags)
 b2.place(relx=0.24, rely=1.0, anchor=SW)
 
-error = Label(win, text='Import failed! You may have the wrong roster format', bg="#002547", fg="white", font=("Arial", 16))
-#error.place(relx=-2.0, anchor=SE)
-
-
-
-
 listOfSlots = [slot0, slot1, slot2, slot3]
 currentNames = [0, 1, 2, 3]
 currentSlot = 0
@@ -181,6 +191,8 @@ win.bind('<Down>', downPress)
 if roster is None:
     for i in range(4):
         listOfSlots[i].config({"text": listOfNames[i]})
+elif roster.error_num != 0:
+    display_error(roster.error_num)
 else:
     update_ui()
 
