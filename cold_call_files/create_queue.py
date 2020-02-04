@@ -1,5 +1,5 @@
 """
-CIS 422 Project 1 Queue
+CIS 422 Project 1 Student Roster
 
 Description: The object classes for students and student data handling is implemented here.
 
@@ -10,7 +10,6 @@ Last modified by: Joseph Goh
 Date last modified: 2/03/20
 
 TODO:
-    * Deprecate functions not in objects (or integrate as necessary)
     * Design and implement various error handling
 """
 # check TODOs
@@ -88,18 +87,36 @@ class Roster:
         # unless GUI support for variable deck size is to be implemented
         self.deck_size = deck_size
 
-        # TODO: Implement behavior for if class summary file is not found
-        # Import the class summary file into memory
-        with open(self.filepath, "r", newline='') as class_file:
-            reader = csv.reader(class_file, dialect='excel-tab', quoting=csv.QUOTE_NONE)
-            # Move past the header
-            next(reader)
-            for row in reader:
-                current_student = Student(row[0], row[1], row[2], row[3], int(row[4]), bool(row[5]), int(row[6]))
-                self.students.append(current_student)
-                if bool(row[5]):
-                    self.flagged.append(current_student)
-                self.size += 1
+        # Error code. 0 indicates that no problems were detected
+        # 1: Roster file not found (init failed)
+        # 2: Invalid roster formatting (init failed)
+        # 3: Invalid conf file formatting (init was done without it)
+        self.error_num = 0
+
+        try:
+            # Import the class summary file into memory
+            with open(self.filepath, "r", newline='') as class_file:
+                reader = csv.reader(class_file, dialect='excel-tab', quoting=csv.QUOTE_NONE)
+                # Move past the header
+                next(reader)
+                try:
+                    for row in reader:
+                        current_student = Student(row[0], row[1], row[2], row[3], int(row[4]), bool(row[5]), int(row[6]))
+                        self.students.append(current_student)
+                        if bool(row[5]):
+                            self.flagged.append(current_student)
+                        self.size += 1
+                # A ValueError or IndexError is most likely due to bad formatting
+                except ValueError:
+                    self.error_num = 2
+                    return
+                except IndexError:
+                    self.error_num = 2
+                    return
+        # If FileNotFoundError, of course, the file isn't found
+        except FileNotFoundError:
+            self.error_num = 1
+            return
 
         # First, do the default build of self.order
         for i in range(self.size):
@@ -129,6 +146,7 @@ class Roster:
                     # Grab next up index
                     self._next = int(conf_file.readline().strip("\n").split("=")[1])
                 else:
+                    self.error_num = 3
                     self.shuffle()
                     for i in range(self.deck_size):
                         self.on_deck.append(self.get_next_idx())
