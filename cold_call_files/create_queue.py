@@ -97,20 +97,23 @@ class Roster:
             # Import the class summary file into memory
             with open(self.filepath, "r", newline='') as class_file:
                 reader = csv.reader(class_file, dialect='excel-tab', quoting=csv.QUOTE_NONE)
-                # Move past the header
-                next(reader)
                 try:
+                    # Move past the header
+                    next(reader)
                     for row in reader:
                         current_student = Student(row[0], row[1], row[2], row[3], int(row[4]), bool(row[5]), int(row[6]))
                         self.students.append(current_student)
                         if bool(row[5]):
                             self.flagged.append(current_student)
                         self.size += 1
-                # A ValueError or IndexError is most likely due to bad formatting
+                # A ValueError, IndexError, or UnicodeDecodeError is most likely due to bad formatting
                 except ValueError:
                     self.error_num = 2
                     return
                 except IndexError:
+                    self.error_num = 2
+                    return
+                except UnicodeDecodeError:
                     self.error_num = 2
                     return
         # If FileNotFoundError, of course, the file isn't found
@@ -155,6 +158,11 @@ class Roster:
             self.shuffle()
             for i in range(self.deck_size):
                 self.on_deck.append(self.get_next_idx())
+
+        # If for whatever reason, the roster turns up empty, record a formatting error
+        if self.size == 0:
+            self.error_num = 2
+            return
 
     def __repr__(self):
         return "Roster({})".format(self.size)
