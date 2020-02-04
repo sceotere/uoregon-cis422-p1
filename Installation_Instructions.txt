@@ -7,7 +7,7 @@
 6. Type “chmod 777 ColdCall”
 7. Open ColdCall again by double clicking
 8. Click the “Import” button in the Cold Call window.
-9. Find the class roster and open it. See  for the correct file formatting!
+9. Find the class roster and open it. See below for the correct file formatting.
 10. You are ready to use Cold Call for class!
 
 
