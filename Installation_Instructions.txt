@@ -1,4 +1,10 @@
-How to install:
+Installation Instructions
+By Mikayla Campbell, Joseph Goh, Olivia Pannell Bethany Van Meter, Ben Verney
+Group Cheetle
+Date Modified: 2/3/20
+
+
+How to Install:
 
 1. Download the zip “G3ColdCall.zip”
 2. Unzip the file “G3ColdCall.zip”
