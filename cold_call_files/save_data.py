@@ -1,15 +1,15 @@
 """
 CIS 422 Project 1 Save Data
 
-Description: Parses class file
+Description: Parses Roster data
 into a list of students and their
-information
+information and outputs into a text file
 
-Authors: Mikayla Campbell, Bethany Van Meter
+Authors: Mikayla Campbell, Bethany Van Meter, Joseph Goh
 
 Last modified by: Joseph Goh
 
-Date last modified: 1/31/20
+Date last modified: 2/03/20
 """
 
 import csv
@@ -97,23 +97,3 @@ def log_startup(log_path: str = "log.txt"):
     with open(log_path, "a") as log:
         output = f"----------------------------------------\nCold-Call app opened on {date.today()}\n"
         log.write(output)
-
-
-# TODO: save not the summary but the daily log...how should we?
-
-def save_daily_log(class_roster, class_name):
-    class_file = open("DO_NOT_TOUCH{}_daily_log.txt" \
-                      .format(class_name), "w")
-
-    # for each student in the whole roster, save their data
-    for student in class_roster:
-        if student.cc_num != 0 or student.num_flags != 0:
-            write_str = student.first + "\t" + \
-                        student.last + "\t" + \
-                        str(student.id_num) + "\t" + \
-                        student.email + "\t" + \
-                        str(student.cc_num) + "\t" + \
-                        str(student.num_flags) + "\n"
-            class_file.write(write_str)
-    class_file.close()
-    return None
