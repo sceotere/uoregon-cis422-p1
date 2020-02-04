@@ -123,7 +123,7 @@ if path.exists("coldcall.ini"):
 
 # sets window size and background color
 win = Tk()
-win.geometry("775x185")
+win.geometry("600x185")
 win.config(bg="#002547")
 win.resizable(True, False)
 win.attributes('-topmost', 'true')
@@ -152,14 +152,14 @@ slot3.grid(row=1, column=4, padx=5, pady=5)
 lbl2 = Label(win, text="Help: \nDequeue - up\nFlag - down", bg="#002547", fg="white", font=("Arial", 12))
 lbl2.place(relx=1.0, rely=1.0, anchor=SE)
 
-b0 = Button(win, text="Import", highlightbackground="#002547", padx=5, command=imprt)
+b0 = Button(win, text="Import", highlightbackground="#002547", padx=10, command=imprt)
 b0.place(relx=0.0, rely=1.0, anchor=SW)
 
-b1 = Button(win, text="Export", highlightbackground="#002547", padx=5, command=exprt)
-b1.place(relx=0.08, rely=1.0, anchor=SW)
+b1 = Button(win, text="Export", highlightbackground="#002547", padx=10, command=exprt)
+b1.place(relx=0.12, rely=1.0, anchor=SW)
 
-b2 = Button(win, text="Reset Flags", highlightbackground="#002547", padx=5, command=reset_flags)
-b2.place(relx=0.16, rely=1.0, anchor=SW)
+b2 = Button(win, text="Reset Flags", highlightbackground="#002547", padx=10, command=reset_flags)
+b2.place(relx=0.24, rely=1.0, anchor=SW)
 
 error = Label(win, text='Import failed! You may have the wrong roster format', bg="#002547", fg="white", font=("Arial", 16))
 #error.place(relx=-2.0, anchor=SE)
