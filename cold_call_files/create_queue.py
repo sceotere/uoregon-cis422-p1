@@ -69,6 +69,9 @@ class Roster:
 
         # The list containing Student objects that account for the entire class
         self.students = []
+        # A duplicate of self.students at time of initialization,
+        # to be used to check stats per-session
+        self.students_orig = []
         # The list containing the indices (relevant to self.students) of students who have been flagged
         self.flagged = []
         # The total number of students in the roster
@@ -101,10 +104,12 @@ class Roster:
                     # Move past the header
                     next(reader)
                     for row in reader:
-                        current_student = Student(row[0], row[1], row[2], row[3], int(row[4]), bool(row[5]), int(row[6]))
-                        self.students.append(current_student)
+                        new_student = Student(row[0], row[1], row[2], row[3], int(row[4]), bool(row[5]), int(row[6]))
+                        new_dupe = Student(row[0], row[1], row[2], row[3], int(row[4]), bool(row[5]), int(row[6]))
+                        self.students.append(new_student)
+                        self.students_orig.append(new_dupe)
                         if bool(row[5]):
-                            self.flagged.append(current_student)
+                            self.flagged.append(new_student)
                         self.size += 1
                 # A ValueError, IndexError, or UnicodeDecodeError is most likely due to bad formatting
                 except ValueError:

@@ -35,7 +35,7 @@ def save_roster(roster: Roster, dest_path: str = "DEFAULT-FILEPATH", export: boo
         writer.writerow(["FirstName", "LastName", "ID-Number", "Email", "ColdCallCount", "Flag", "FlagCount"])
         writer.writerows(rows)
 
-    # Do the same as above, but this time, only for students that are flagged
+    # Save flagged students in a separate file
     flagged_rows = [
         [s.first, s.last, s.id_num, s.email, str(s.cc_ct), str(int(s.flag)), str(s.flag_ct)] for s in roster.flagged
     ]
@@ -43,6 +43,21 @@ def save_roster(roster: Roster, dest_path: str = "DEFAULT-FILEPATH", export: boo
         writer = csv.writer(flag_file, dialect='excel-tab', quoting=csv.QUOTE_NONE)
         writer.writerow(["FirstName", "LastName", "ID-Number", "Email", "ColdCallCount", "Flag", "FlagCount"])
         writer.writerows(flagged_rows)
+
+    # Create a session-specific summary-log
+    session_rows = []
+    for i in range(roster.size):
+        s = roster.students[i]
+        s_orig = roster.students_orig[i]
+        session_rows.append(
+            [s.first, s.last, s.id_num, s.email,
+             str(s.cc_ct - s_orig.cc_ct), str(int(s.flag) - int(s_orig.flag)), str(s.flag_ct - s_orig.flag_ct)]
+        )
+    with open(dest_path[:-4] + "_daily.txt", "w", newline='') as daily_file:
+        daily_file.write("===========Daily (session) summary for {}==========\n".format(date.today()))
+        writer = csv.writer(daily_file, dialect='excel-tab', quoting=csv.QUOTE_NONE)
+        writer.writerow(["FirstName", "LastName", "ID-Number", "Email", "ColdCallCount", "Flag", "FlagCount"])
+        writer.writerows(session_rows)
 
     # Save other session info but only if the user is not manually exporting the summary file
     if not export:
