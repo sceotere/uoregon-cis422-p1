@@ -4,7 +4,7 @@ Group Cheetle
 Date Modified: 2/3/20
 
 
-How to install:
+How to Install:
 
 1. Download the zip “G3ColdCall.zip”
 2. Unzip the file “G3ColdCall.zip”
