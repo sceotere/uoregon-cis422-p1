@@ -103,11 +103,14 @@ class Roster:
                 try:
                     # Move past the header
                     next(reader)
+                    # Iterate through each line and append a new Student and a dupe
+                    # to self.students and self.students_orig, respectively
                     for row in reader:
                         new_student = Student(row[0], row[1], row[2], row[3], int(row[4]), bool(row[5]), int(row[6]))
                         new_dupe = Student(row[0], row[1], row[2], row[3], int(row[4]), bool(row[5]), int(row[6]))
                         self.students.append(new_student)
                         self.students_orig.append(new_dupe)
+                        # If the student's flag is set, also append to self.flagged
                         if bool(row[5]):
                             self.flagged.append(new_student)
                         self.size += 1
