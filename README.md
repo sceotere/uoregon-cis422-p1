@@ -1,6 +1,6 @@
 # uoregon-cis422-p1
 
-Shared repository for group: <group-name>s CIS 422 Winter 2020 Project 1 at the University of Oregon
+Shared repository for group: Cheetle®s CIS 422 Winter 2020 Project 1 at the University of Oregon
 
 The goal of the project is for our group to successfully manage and develop a "Classroom Cold-Call Assist Software Program" largely based on the SRS written and provided by Professor Anthony Hornof.
 
